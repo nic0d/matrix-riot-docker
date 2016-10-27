@@ -1,16 +1,7 @@
 FROM alpine:3.4
 
-# Maintainer
-MAINTAINER Silvio Fricke <silvio.fricke@gmail.com>
-
-# install homeserver template
-COPY adds/start.sh /start.sh
-
-# startup configuration
-ENTRYPOINT ["/start.sh"]
-
 # Git branch to download
-ENV BV_VEC=master
+ENV BV_VEC=0.8.3
 
 # To rebuild the image, add `--build-arg REBUILD=$(date)` to your docker build
 # command.
@@ -18,8 +9,7 @@ ARG REBUILD=0
 
 # update and upgrade
 # installing riot.im with nodejs/npm
-RUN chmod a+x /start.sh \
-    && apk update \
+RUN apk update \
     && apk add \
         curl \
         git \
@@ -32,7 +22,7 @@ RUN chmod a+x /start.sh \
         unzip \
         ; \
     npm install -g webpack http-server \
-    && curl -L https://github.com/vector-im/vector-web/archive/$BV_VEC.zip -o v.zip \
+    && curl -L https://github.com/vector-im/vector-web/archive/v$BV_VEC.zip -o v.zip \
     && unzip v.zip \
     && rm v.zip \
     && mv vector-web-$BV_VEC riot-web \
@@ -48,3 +38,12 @@ RUN chmod a+x /start.sh \
         unzip \
         ; \
     rm -rf /var/lib/apk/* /var/cache/apk/*
+
+# install homeserver template
+COPY adds/start.sh /start.sh
+COPY adds/config.json /riot-web/vector/config.json
+
+RUN chmod a+x /start.sh
+
+# startup configuration
+ENTRYPOINT ["/start.sh"]
