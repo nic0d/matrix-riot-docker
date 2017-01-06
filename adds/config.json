@@ -1,5 +1,5 @@
 {
-    "default_hs_url": "https://localhost:8448",
+    "default_hs_url": "https://localhost",
     "default_is_url": "",
     "brand": "Riot",
     "integrations_ui_url": "http://localhost:8081/",
